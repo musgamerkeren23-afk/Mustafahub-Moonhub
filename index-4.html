@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moon Hub | Roblox Scripts</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05050d;
+    --card: #0c0c18;
+    --border: #1a1a30;
+    --accent: #c084fc;
+    --accent2: #818cf8;
+    --accent3: #38bdf8;
+    --glow: rgba(192,132,252,0.25);
+    --text: #c8d0e0;
+    --dim: #55556a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(129,140,248,0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(56,189,248,0.07), transparent);
+    pointer-events:none; z-index:0;
+  }
+
+  .stars {
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 75% 40%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 90% 75%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 20% 85%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 65% 90%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1.5px 1.5px at 45% 50%, rgba(192,132,252,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 85% 10%, rgba(56,189,248,0.5), transparent);
+  }
+
+  header {
+    position:relative; z-index:10;
+    padding: 40px 20px 24px;
+    text-align:center;
+  }
+
+  .moon-icon {
+    font-size: 48px;
+    display:block;
+    margin-bottom:10px;
+    animation: moonpulse 3s ease-in-out infinite;
+  }
+  @keyframes moonpulse {
+    0%,100%{filter:drop-shadow(0 0 15px var(--accent));}
+    50%{filter:drop-shadow(0 0 35px var(--accent)) drop-shadow(0 0 60px rgba(192,132,252,0.3));}
+  }
+
+  .logo {
+    font-family:'Orbitron',monospace;
+    font-size: clamp(28px,8vw,52px);
+    font-weight:900;
+    letter-spacing:4px;
+    background: linear-gradient(135deg, #c084fc, #818cf8, #38bdf8);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
+  .tagline {
+    margin-top:8px;
+    font-size:11px;
+    color:var(--dim);
+    letter-spacing:5px;
+    text-transform:uppercase;
+  }
+
+  nav {
+    display:flex; justify-content:center; gap:8px;
+    padding:16px 20px;
+    position:relative; z-index:10;
+    flex-wrap:wrap;
+  }
+
+  .tab {
+    padding:9px 22px;
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--dim);
+    font-family:'Share Tech Mono',monospace;
+    font-size:12px;
+    cursor:pointer;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    transition:all 0.25s;
+  }
+  .tab:hover,.tab.active {
+    border-color:var(--accent);
+    color:var(--accent);
+    background:rgba(192,132,252,0.07);
+    box-shadow:0 0 14px rgba(192,132,252,0.2);
+  }
+
+  main {
+    position:relative; z-index:10;
+    max-width:860px;
+    margin:0 auto;
+    padding:20px 16px 80px;
+  }
+
+  .section{display:none;}
+  .section.active{display:block;}
+
+  .section-title {
+    font-family:'Orbitron',monospace;
+    font-size:11px;
+    color:var(--accent2);
+    letter-spacing:4px;
+    text-transform:uppercase;
+    margin-bottom:18px;
+    padding-bottom:10px;
+    border-bottom:1px solid var(--border);
+  }
+
+  .script-grid { display:grid; gap:18px; }
+
+  .script-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:22px;
+    position:relative;
+    overflow:hidden;
+    transition:border-color 0.25s, box-shadow 0.25s;
+  }
+  .script-card::after {
+    content:'';
+    position:absolute; top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);
+    opacity:0;
+    transition:opacity 0.25s;
+  }
+  .script-card:hover {
+    border-color:rgba(192,132,252,0.3);
+    box-shadow:0 0 30px rgba(192,132,252,0.08);
+  }
+  .script-card:hover::after{opacity:1;}
+
+  .script-header {
+    display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;
+  }
+  .script-name {
+    font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:#fff;
+  }
+  .badge {
+    font-size:9px;padding:3px 9px;border:1px solid;
+    letter-spacing:1.5px;text-transform:uppercase;
+  }
+  .badge.op{border-color:#f472b6;color:#f472b6;}
+  .badge.new{border-color:#fbbf24;color:#fbbf24;}
+
+  .script-desc {
+    font-size:13px;color:var(--dim);margin-bottom:16px;line-height:1.7;
+  }
+
+  .loadstring-box {
+    background:#070712;
+    border:1px solid var(--border);
+    border-left:2px solid var(--accent2);
+    padding:13px 14px;
+    font-size:12px;
+    color:#a5b4fc;
+    word-break:break-all;
+    line-height:1.6;
+    margin-bottom:13px;
+  }
+
+  .copy-btn {
+    width:100%;
+    padding:11px;
+    background:linear-gradient(90deg,rgba(192,132,252,0.08),rgba(129,140,248,0.08));
+    border:1px solid rgba(192,132,252,0.4);
+    color:var(--accent);
+    font-family:'Share Tech Mono',monospace;
+    font-size:12px;
+    cursor:pointer;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    transition:all 0.2s;
+  }
+  .copy-btn:hover {
+    background:linear-gradient(90deg,rgba(192,132,252,0.18),rgba(129,140,248,0.18));
+    box-shadow:0 0 20px rgba(192,132,252,0.2);
+  }
+  .copy-btn.copied { border-color:#34d399;color:#34d399; }
+
+  .tutorial-steps{display:grid;gap:14px;}
+  .step {
+    display:flex;gap:18px;align-items:flex-start;
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:20px;
+  }
+  .step-num {
+    font-family:'Orbitron',monospace;font-size:30px;font-weight:900;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    min-width:44px;line-height:1;opacity:0.7;
+  }
+  .step-content h3 {
+    font-family:'Orbitron',monospace;font-size:13px;color:#fff;margin-bottom:7px;letter-spacing:1px;
+  }
+  .step-content p { font-size:13px;color:var(--dim);line-height:1.75; }
+  .step-content code {
+    color:var(--accent);background:rgba(192,132,252,0.1);
+    padding:1px 6px;font-size:12px;
+  }
+
+  .warning-box {
+    margin-top:20px;padding:16px;
+    border:1px solid rgba(251,191,36,0.3);
+    background:rgba(251,191,36,0.04);
+    font-size:12px;color:#fbbf24;line-height:1.7;
+  }
+
+  footer {
+    text-align:center;padding:22px;
+    font-size:10px;color:var(--dim);
+    position:relative;z-index:10;
+    border-top:1px solid var(--border);
+    letter-spacing:3px;
+  }
+
+  #toast {
+    position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    color:#fff;
+    padding:10px 28px;
+    font-family:'Orbitron',monospace;font-size:11px;
+    letter-spacing:2px;z-index:999;
+    opacity:0;pointer-events:none;
+    transition:opacity 0.3s;
+    box-shadow:0 0 30px var(--glow);
+  }
+  #toast.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<header>
+  <span class="moon-icon">🌙</span>
+  <div class="logo">Moon Hub</div>
+  <div class="tagline">Roblox Script Hub — Free &amp; Working</div>
+</header>
+
+<nav>
+  <button class="tab active" onclick="showTab('scripts',this)">📜 Script List</button>
+  <button class="tab" onclick="showTab('tutorial',this)">📖 Tutorial</button>
+</nav>
+
+<main>
+
+  <!-- SCRIPTS -->
+  <div id="scripts" class="section active">
+    <div class="section-title">// Script List</div>
+    <div class="script-grid">
+
+      <div class="script-card">
+        <div class="script-header">
+          <span class="script-name">Mustafa Hub</span>
+          <span class="badge op">OP</span>
+        </div>
+        <div class="script-desc">Script utama Moon Hub — berisi berbagai cheat &amp; fitur lengkap untuk Roblox. Auto update langsung dari GitHub.</div>
+        <div class="loadstring-box" id="ls1">loadstring(game:HttpGet("https://raw.githubusercontent.com/musgamerkeren23-afk/Mustafahub/refs/heads/main/MustafaHub.lua"))()</div>
+        <button class="copy-btn" onclick="copyScript('ls1',this)">⧉ Copy Loadstring</button>
+      </div>
+
+      <div class="script-card">
+        <div class="script-header">
+          <span class="script-name">Grow a Garden</span>
+          <span class="badge new">NEW</span>
+        </div>
+        <div class="script-desc">Script khusus game Grow a Garden — auto farm, auto collect, dan berbagai fitur untuk ngebut progress kamu.</div>
+        <div class="loadstring-box" id="ls2">loadstring(game:HttpGet("https://raw.githubusercontent.com/musgamerkeren23-afk/GrowaGarden/refs/heads/main/GrowaGarden.lua"))()</div>
+        <button class="copy-btn" onclick="copyScript('ls2',this)">⧉ Copy Loadstring</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TUTORIAL -->
+  <div id="tutorial" class="section">
+    <div class="section-title">// Cara Pakai Script</div>
+    <div class="tutorial-steps">
+
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h3>Download Executor</h3>
+          <p>Kamu butuh executor Roblox. Untuk Android: <strong>Arceus X</strong> atau <strong>Delta Executor</strong>. Untuk PC: <strong>KRNL</strong> atau <strong>Synapse X</strong>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h3>Buka Game Roblox</h3>
+          <p>Masuk ke game Roblox yang ingin kamu gunakan scriptnya. Tunggu sampai game fully loaded sebelum inject.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h3>Copy Loadstring</h3>
+          <p>Pilih script di halaman <code>Script List</code>, lalu klik tombol <strong>⧉ Copy Loadstring</strong>. Otomatis tersalin ke clipboard.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <h3>Inject &amp; Execute</h3>
+          <p>Buka executor → Attach ke Roblox → Paste loadstring → Klik <code>Execute</code>. Script langsung jalan!</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <h3>Enjoy! 🌙</h3>
+          <p>GUI script akan muncul. Aktifkan fitur yang kamu mau. Kalau error, coba re-inject dan execute lagi.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="warning-box">
+      ⚠ DISCLAIMER: Menggunakan cheat berisiko kena ban dari Roblox. Disarankan pakai akun alternatif. Script disediakan untuk tujuan edukasi.
+    </div>
+  </div>
+
+</main>
+
+<footer>🌙 MOON HUB © 2026 — ROBLOX SCRIPT HUB</footer>
+
+<div id="toast">✓ LOADSTRING COPIED!</div>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function copyScript(id, btn) {
+    const text = document.getElementById(id).textContent.trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = '✓ COPIED!';
+      btn.classList.add('copied');
+      showToast();
+      setTimeout(() => {
+        btn.textContent = '⧉ Copy Loadstring';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  function showToast() {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+</script>
+</body>
+</html>
